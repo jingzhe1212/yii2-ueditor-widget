@@ -10530,6 +10530,8 @@ UE.plugins['autotypeset'] = function(){
         }else{
             cont = me.document.body;
         }
+        // 清除所有无用标签
+        me.execCommand('removeformat');
         var nodes = domUtils.getElementsByTagName(cont,'*');
 
         // 行首缩进，段落方向，段间距，段内间距
@@ -10538,20 +10540,26 @@ UE.plugins['autotypeset'] = function(){
             if(me.fireEvent('excludeNodeinautotype',ci) === true){
                 continue;
             }
+            // 清除样式
+            domUtils.removeAttributes(ci, ['style']);
+
              //font-size
-            if(opt.clearFontSize && ci.style.fontSize){
-                domUtils.removeStyle(ci,'font-size');
-
-                removeNotAttributeSpan(ci);
-
-            }
-            //font-family
-            if(opt.clearFontFamily && ci.style.fontFamily){
-                domUtils.removeStyle(ci,'font-family');
-                removeNotAttributeSpan(ci);
-            }
+            //if(opt.clearFontSize && ci.style.fontSize){
+            //    domUtils.removeStyle(ci,'font-size');
+            //
+            //    removeNotAttributeSpan(ci);
+            //
+            //}
+            ////font-family
+            //if(opt.clearFontFamily && ci.style.fontFamily){
+            //    domUtils.removeStyle(ci,'font-family');
+            //    removeNotAttributeSpan(ci);
+            //}
+            //console.log(ci);
 
             if(isLine(ci)){
+                // 去掉行首空格
+                ci.innerHTML = ci.innerHTML.replace(/^( |　)+/,　'');
                 //合并空行
                 if(opt.mergeEmptyline ){
                     var next = ci.nextSibling,tmpNode,isBr = domUtils.isBr(ci);
